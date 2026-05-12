@@ -1,0 +1,20 @@
+### GET all persons
+GET http://localhost:3001/api/persons
+
+### GET info
+GET http://localhost:3001/info
+
+### GET specific person
+GET http://localhost:3001/api/persons/3
+
+### DELETE entry
+DELETE http://localhost:3001/api/persons/3
+
+### POST new entry
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Maik Rehan",
+  "number": "12-43-234345123123123123"
+}
