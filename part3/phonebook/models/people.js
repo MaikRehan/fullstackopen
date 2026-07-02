@@ -10,7 +10,7 @@ mongoose.connect(url, { family: 4 })
     .then(result => {
         console.log('connected to MongoDB')
     })
-    .catch((err) => {
+    .catch((error) => {
         console.log('error connecting to MongoDB:', error.message)
     })
 

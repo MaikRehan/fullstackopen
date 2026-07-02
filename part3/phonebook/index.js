@@ -1,5 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require("morgan");
+const Person = require('./models/people')
 const app = express()
 
 
@@ -56,7 +58,9 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.send(persons)
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -86,31 +90,15 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    if (persons.find(person => person.name === body.name)) {
-        return response.status(400).json({
-            error: 'name already exists in the phonebook'
-        })
-    }
-
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateId()
-    }
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
-
-    // console.log(request.body)
-    // logger(morgan.token('type', function (request, response) { return request.headers['content-type'] }))
-
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
-
-const generateId = () => {
-    const id = Math.random() * 100000
-    return String(id)
-}
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT)
