@@ -15,3 +15,6 @@ Content-Type: application/json
   "content": "WebStorm is best",
   "important": true
 }
+
+###
+DELETE  http://localhost:3001/api/notes/6a477525b1e1c73b16f1a578
