@@ -92,6 +92,15 @@ const App = () => {
                     setNotification(`Updated '${updatedPerson.name}'s number `)
                     setTimeout(() => setNotification(null), 2000)
                 })
+                .catch(error => {
+                    console.log(error.response.data.error)
+                    setNotification(error.response.data.error)
+                    setMessageType('error')
+                    setTimeout(() => {
+                        setNotification(null)
+                        setMessageType('notification')
+                    }, 2000)
+                })
         } else {
             console.log('Update of entry with the name ${personObject.name} and name  cancelled')
         }
@@ -108,6 +117,15 @@ const App = () => {
                 setNewNumber('')
                 setNotification(`Added '${returnedPerson.name}' `)
                 setTimeout(() => setNotification(null), 2000)
+            })
+            .catch(error => {
+                console.log(error.response.data.error)
+                setNotification(error.response.data.error)
+                setMessageType('error')
+                setTimeout(() => {
+                    setNotification(null)
+                    setMessageType('notification')
+                }, 2000)
             })
     }
   }
