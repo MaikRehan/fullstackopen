@@ -19,27 +19,27 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 const savePerson = () => {
-    const personName = process.argv[3];
-    const personNumber = process.argv[4];
+    const personName = process.argv[3]
+    const personNumber = process.argv[4]
 
     const person = new Person({
         name: personName,
         number: personNumber
-    });
+    })
 
     person.save().then(result => {
-        console.log(`note saved: {}`, result);
-        mongoose.connection.close();
+        console.log(`note saved: {}`, result)
+        mongoose.connection.close()
     })
 }
 
 const findPeople = () => {
-    console.log('phonebook:');
+    console.log('phonebook:')
     Person.find({}).then(result => {
         result.forEach(person => {
-            console.log(person.name, person.number);
+            console.log(person.name, person.number)
         })
-        mongoose.connection.close();
+        mongoose.connection.close()
     })
 }
 
