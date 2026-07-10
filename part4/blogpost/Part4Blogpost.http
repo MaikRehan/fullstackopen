@@ -2,7 +2,7 @@
 #GET http://localhost:3001/api/persons
 
 ### GET info
-#GET http://localhost:3001/info
+GET http://localhost:3003/api/blogs
 
 ### GET specific person
 #GET http://localhost:3001/api/persons/3
