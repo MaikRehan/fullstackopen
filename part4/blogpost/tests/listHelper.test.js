@@ -110,6 +110,14 @@ describe('favoriteBlog', () => {
     })
 })
 
+describe('blogs by author with most likes ', () => {
+
+    test('shows blogs of single blog list', () => {
+        console.log(listHelper.mostBlogs(multipleBlogs))
+    })
+
+})
+
 
 
 
