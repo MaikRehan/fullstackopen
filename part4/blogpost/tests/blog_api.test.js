@@ -38,6 +38,24 @@ test('blogs identifier is named id and not _id', async () => {
     })
 })
 
+test('blogs are saved correctly', async () => {
+    const newBlog = {
+        title: 'TestBlog',
+        author: 'Test Author',
+        url: 'TestURL',
+        likes: 5,
+    }
 
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+    const contents = blogsAtEnd.map(blog => blog.title)
+    assert(contents.includes('TestBlog'))
+})
 
 // ...
