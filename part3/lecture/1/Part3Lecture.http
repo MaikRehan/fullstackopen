@@ -1,5 +1,5 @@
 ### GET request to example server
-GET http://localhost:3001/api/notes/3
+GET http://localhost:3001/api/notes
 
 ###
 
@@ -12,7 +12,7 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "abc",
+  "content": "abcde",
   "important": true
 }
 
