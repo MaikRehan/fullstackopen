@@ -75,4 +75,37 @@ test('defaults likes to 0 if property is missing from request', async () => {
     assert.strictEqual(response.body.likes, 0)
 })
 
+test('bad request 400 upon creating new blog with missing title', async () => {
+    const newBlog = {
+        author: 'Test Author',
+        url: 'TestURL',
+        likes: 5
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
+test('bad request 400 upon creating new blog with missing url', async () => {
+    const newBlog = {
+        title: 'TestBlog',
+        author: 'Test Author',
+        likes: 5
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
+
+
 // ...
