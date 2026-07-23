@@ -58,4 +58,21 @@ test('blogs are saved correctly', async () => {
     assert(contents.includes('TestBlog'))
 })
 
+test('defaults likes to 0 if property is missing from request', async () => {
+    const newBlog = {
+        title: 'TestBlog',
+        author: 'Test Author',
+        url: 'TestURL',
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    console.log(response.body)
+    console.log(response.body.likes)
+    assert.strictEqual(response.body.likes, 0)
+})
+
 // ...
