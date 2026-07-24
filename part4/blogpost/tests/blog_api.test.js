@@ -121,5 +121,21 @@ test('succeeds with status code 204 if id is valid', async () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 })
 
+test('update amount of likes of existing blogs with given id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const likesAtStart = blogToUpdate.likes //save initial likes
+    blogToUpdate.likes = likesAtStart + 1   // set to strictly different amount
+    const result = await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(blogToUpdate)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    assert.deepStrictEqual(result.body.likes, likesAtStart + 1)
+
+})
+
 
 // ...

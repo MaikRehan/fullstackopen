@@ -20,3 +20,11 @@ Content-Type: application/json
   "url": "asdefgasdf",
   "likes": "4"
 }
+
+### Update blog
+PUT http://localhost:3003/api/blogs/5a422bc61b54a676234d17fc
+Content-Type: application/json
+
+{
+  "likes": "7"
+}
