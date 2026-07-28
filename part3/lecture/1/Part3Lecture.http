@@ -10,11 +10,11 @@ DELETE http://localhost:3001/api/notes/3
 ###
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2YTY4NGM2YjkzMWI1ZGNkZjA2N2IwZTMiLCJpYXQiOjE3ODUyMjYzMzV9.xiVGnQpvZ7s7jWxIv1ZxXWTItfSB5_uQILwgS7wvVI8
 
 {
   "content": "abcdesdfghsdfhsdfh",
-  "important": true,
-  "userId": "6a684c6b931b5dcdf067b0e3"
+  "important": true
 }
 
 ###
@@ -33,3 +33,12 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3001/api/users/
+
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "salainen"
+}
