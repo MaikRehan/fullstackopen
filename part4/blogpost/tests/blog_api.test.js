@@ -5,12 +5,15 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+    await User.insertMany(helper.initialUsers)
 })
 
 after(async () => {
@@ -20,7 +23,7 @@ after(async () => {
 test('blogs are returned as json', async () => {
     await api
         .get('/api/blogs')
-        .expect(201)
+        .expect(200)
         .expect('Content-Type', /application\/json/)
 })
 
