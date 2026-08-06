@@ -13,7 +13,7 @@ GET http://localhost:3003/api/blogs
 ### POST new entry
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1haWsiLCJpZCI6IjZhNzQxMDYyZTJkOGRhNTNhNTAxYzI3YSIsImlhdCI6MTc4NTk5MzIxMn0.9lqfgYPPIr6bI8bfH28v2akfj98woAFQHCgCNWqSRp0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1haWsiLCJpZCI6IjZhNzQxMDYyZTJkOGRhNTNhNTAxYzI3YSIsImlhdCI6MTc4NTk5NjM1Nn0.yt5TLCQIIB9doJdR3Apd28Dv8n1o35NTXQziIAeRJTE
 
 {
   "title": "ab",
@@ -21,6 +21,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1ha
   "url": "asdefgasdf",
   "likes": "4"
 }
+### DELETE entry
+DELETE http://localhost:3003/api/blogs/6a74310ec6d2d22c3c568a73
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1haWsiLCJpZCI6IjZhNzQxMDYyZTJkOGRhNTNhNTAxYzI3YSIsImlhdCI6MTc4NTk5ODA2NH0.ogRQx8uCBpwjjlKQh6C7UTdLJ1xomFjhCCfnKYyPkpI
 
 ### Update blog
 PUT http://localhost:3003/api/blogs/5a422bc61b54a676234d17fc
