@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const bcrypt = require("bcrypt");
 
 const initialBlogs = [
     {
@@ -64,6 +65,13 @@ const initialUsers = [
         "id": "6a717911372b5174cace4b09"
     }
 ]
+const saltRounds = 10
+const authorizedCredentials = { username: 'authorized', password: '123456' }
+
+const createAuthorizedUser = async () => {
+    const passwordHash = await bcrypt.hash(authorizedCredentials.password, saltRounds)
+    return User.create({ username: authorizedCredentials.username, name: 'Authorized', passwordHash })
+}
 
 const nonExistingId = async () => {
     const blog = new Blog({ title: 'willremovethissoon' })
@@ -83,8 +91,25 @@ const usersInDb = async () => {
     return users.map(user => user.toJSON())
 }
 
+// `api` wird von der Testdatei hereingereicht (supertest(app))
+const loginUser = async (api) => {
+    const response = await api
+        .post('/api/login')
+        .send(authorizedCredentials)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    return response.body.token
+}
 
 
 module.exports = {
-    initialBlogs, initialUsers, nonExistingId, blogsInDb, usersInDb
+    initialBlogs,
+    initialUsers,
+    authorizedCredentials,
+    createAuthorizedUser,
+    loginUser,
+    nonExistingId,
+    blogsInDb,
+    usersInDb
 }
