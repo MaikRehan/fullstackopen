@@ -8,11 +8,13 @@ const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [errorMessage, setNotification] = useState(null)
+    const [messageType, setMessageType] = useState('notification')
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
     const [newBlog, setNewBlog] = useState('')
+
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -29,6 +31,18 @@ const App = () => {
         }
     }, [])
 
+    const Notification = ({ message , messageType}) => {
+        if (message === null) {
+            return null
+        }
+
+        return (
+            <div className={messageType}>
+                {message}
+            </div>
+        )
+    }
+
     const handleLogin = async event => {    event
         .preventDefault()
 
@@ -43,10 +57,13 @@ const App = () => {
             setUsername('')
             setPassword('')
         } catch {
-            setErrorMessage('wrong credentials')
+            setNotification('wrong credentials')
+            setMessageType('error')
             setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000)
+                setNotification(null)
+                setMessageType('notification')
+
+            }, 2000)
         }
     }
 
@@ -118,13 +135,20 @@ const App = () => {
             author: author,
             url: url,
         }
-        blogService.create(newBlog).then(returnedBlog => {
-            setBlogs(blogs.concat(returnedBlog))
-            setNewBlog('')
-            setTitle('')
-            setAuthor('')
-            setUrl('')
+        blogService.create(newBlog)
+            .then(returnedBlog => {
+                setBlogs(blogs.concat(returnedBlog))
+                setNewBlog('')
+                setTitle('')
+                setAuthor('')
+                setUrl('')
+                setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
+                setTimeout(() => setNotification(null), 2000)
         })
+            .catch(error => {
+                setNotification(`Can not add new blog post`)
+                setMessageType('error')
+            })
     }
 
     const newBlogForm = () => (
@@ -166,6 +190,7 @@ const App = () => {
 
     return (
         <div>
+            <Notification message={errorMessage} messageType={messageType} />
             {toggleLoginAndNoteForm()}
         </div>
     )
