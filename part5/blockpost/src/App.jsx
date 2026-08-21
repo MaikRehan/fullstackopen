@@ -4,6 +4,7 @@ import blogService from './services/blogs.js'
 import loginService from './services/login'
 import Togglable from "./components/Togglable.jsx";
 import NewBlogForm from "./components/NewBlogForm.jsx";
+import blog from "./components/Blog.jsx";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -120,9 +121,11 @@ const App = () => {
                         <p>{user.name} logged in</p>
                         <button onClick={() => logout()}>logout</button>
                         {blogs.map(blog =>
-                            <Blog key={blog.id}
-                                  blog={blog}>
-
+                            <Blog
+                                  key={blog.id}
+                                  blog={blog}
+                                  addLikeToBlog={addLikeToBlog}
+                            >
                             </Blog>
                         )}
                         <h2>create new</h2>
@@ -164,6 +167,23 @@ const App = () => {
                 setNotification(`Can not add new blog post`)
                 setMessageType('error')
             })
+    }
+
+    const addLikeToBlog = async (blog)  => {
+
+        try {
+            const updatedBlog =  await blogService.addLikeToBlog(blog)
+            setBlogs(blogs.map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog)))
+            setNotification(`added like to blog' '${blog.title}'`)
+            setTimeout(() => setNotification(null), 2000)
+        } catch{
+            setNotification(`Can not add like to blog post`)
+            setMessageType('error')
+            setTimeout(() => setNotification(null), 2000)
+        }
+
+
+
     }
 
     return (

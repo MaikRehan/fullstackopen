@@ -65,8 +65,6 @@ blogsRouter.put('/:id', async (request, response) => {
 
     const updatedBlog = await blog.save()
     response.status(200).json(updatedBlog)
-
-
 })
 
 module.exports = blogsRouter
