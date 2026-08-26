@@ -39,4 +39,4 @@ const removeBlog = async id => {
 }
 
 
-export default { getAll , create, setToken, addLikeToBlog, removeBlog}
+export default { getAll , create, setToken, addLikeToBlog, removeBlog }

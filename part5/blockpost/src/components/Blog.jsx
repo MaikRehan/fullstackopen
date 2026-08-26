@@ -1,6 +1,6 @@
-import Togglable from "./Togglable.jsx";
+import Togglable from './Togglable.jsx'
 
-const Blog = ({blog, addLikeToBlog, deleteBlog}) => {
+const Blog = ({ blog, addLikeToBlog, deleteBlog }) => {
 
     const blogStyle = {
         paddingTop: 10,

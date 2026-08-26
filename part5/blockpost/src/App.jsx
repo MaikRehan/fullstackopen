@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog.jsx'
 import blogService from './services/blogs.js'
 import loginService from './services/login'
-import Togglable from "./components/Togglable.jsx";
-import NewBlogForm from "./components/NewBlogForm.jsx";
-import blog from "./components/Blog.jsx";
+import Togglable from './components/Togglable.jsx'
+import NewBlogForm from './components/NewBlogForm.jsx'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -16,7 +15,6 @@ const App = () => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
-    const [newBlog, setNewBlog] = useState('')
 
 
     useEffect(() => {
@@ -34,7 +32,7 @@ const App = () => {
         }
     }, [])
 
-    const Notification = ({ message , messageType}) => {
+    const Notification = ({ message , messageType }) => {
         if (message === null) {
             return null
         }
@@ -133,12 +131,12 @@ const App = () => {
                         <Togglable buttonLabel="show">
                             <NewBlogForm
                                 handleSubmit={createBlog}
-                                handleTitleChange={({target}) => setTitle(target.value)}
-                                handleAuthorChange={({target}) => setAuthor(target.value)}
-                                handleUrlChange={({target}) => setUrl(target.value)}
-                                title={title}
-                                author={author}
-                                url={url}
+                                handleTitleChange={({ target }) => setTitle(target.value)}
+                                handleAuthorChange={({ target }) => setAuthor(target.value)}
+                                handleUrlChange={({ target }) => setUrl(target.value)}
+                                title={ title }
+                                author={ author }
+                                url={ url }
                             />
                         </Togglable>
                     </div>
@@ -157,16 +155,16 @@ const App = () => {
         blogService.create(newBlog)
             .then(returnedBlog => {
                 setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
-                setNewBlog('')
                 setTitle('')
                 setAuthor('')
                 setUrl('')
                 setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
                 setTimeout(() => setNotification(null), 2000)
             })
-            .catch(error => {
-                setNotification(`Can not add new blog post`)
+            .catch(() => {
+                setNotification('Can not add new blog post')
                 setMessageType('error')
+                setTimeout(() => setNotification(null), 2000)
             })
     }
 
@@ -182,7 +180,7 @@ const App = () => {
             setNotification(`added like to blog' '${blog.title}'`)
             setTimeout(() => setNotification(null), 2000)
         } catch{
-            setNotification(`Can not add like to blog post`)
+            setNotification('Can not add like to blog post')
             setMessageType('error')
             setTimeout(() => setNotification(null), 2000)
         }
@@ -193,7 +191,7 @@ const App = () => {
         console.log(blogToBeDeleted)
         console.log(user)
         if(user.username !== blogToBeDeleted.user.username) {
-            setNotification(`This blog was not written by you and therefore can not be deleted`)
+            setNotification('This blog was not written by you and therefore can not be deleted')
             setMessageType('error')
             setTimeout(() => setNotification(null), 2000)
             return
@@ -207,7 +205,7 @@ const App = () => {
                     .sort((a, b) => b.likes - a.likes)
                 )
             } catch {
-                setNotification(`Can not delete blog post`)
+                setNotification('Can not delete blog post')
                 setMessageType('error')
                 setTimeout(() => setNotification(null), 2000)
             }
