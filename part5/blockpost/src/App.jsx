@@ -125,6 +125,7 @@ const App = () => {
                                   key={blog.id}
                                   blog={blog}
                                   addLikeToBlog={addLikeToBlog}
+                                  deleteBlog={deleteBlog}
                             >
                             </Blog>
                         )}
@@ -181,9 +182,17 @@ const App = () => {
             setMessageType('error')
             setTimeout(() => setNotification(null), 2000)
         }
+    }
 
-
-
+    const deleteBlog = async (id) => {
+        try {
+            await blogService.removeBlog(id)
+            setBlogs(blogs.filter(blog => blog.id !== id))
+        } catch {
+            setNotification(`Can not delete blog post`)
+            setMessageType('error')
+            setTimeout(() => setNotification(null), 2000)
+        }
     }
 
     return (
