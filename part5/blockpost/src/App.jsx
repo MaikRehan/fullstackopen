@@ -4,6 +4,7 @@ import blogService from './services/blogs.js'
 import loginService from './services/login'
 import Togglable from "./components/Togglable.jsx";
 import NewBlogForm from "./components/NewBlogForm.jsx";
+import blog from "./components/Blog.jsx";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -188,17 +189,30 @@ const App = () => {
     }
 
     const deleteBlog = async (id) => {
-        try {
-            await blogService.removeBlog(id)
-            setBlogs(blogs
-                .filter(blog => blog.id !== id)
-                .sort((a, b) => b.likes - a.likes)
-            )
-        } catch {
-            setNotification(`Can not delete blog post`)
+        const blogToBeDeleted = blogs.find(blog => blog.id === id)
+        console.log(blogToBeDeleted)
+        console.log(user)
+        if(user.username !== blogToBeDeleted.user.username) {
+            setNotification(`This blog was not written by you and therefore can not be deleted`)
             setMessageType('error')
             setTimeout(() => setNotification(null), 2000)
+            return
         }
+
+        if(window.confirm('Are you sure you want to delete this entry?')) {
+            try {
+                await blogService.removeBlog(id)
+                setBlogs(blogs
+                    .filter(blog => blog.id !== id)
+                    .sort((a, b) => b.likes - a.likes)
+                )
+            } catch {
+                setNotification(`Can not delete blog post`)
+                setMessageType('error')
+                setTimeout(() => setNotification(null), 2000)
+            }
+        }
+
     }
 
     return (
