@@ -4,7 +4,6 @@ import blogService from './services/blogs.js'
 import loginService from './services/login'
 import Togglable from "./components/Togglable.jsx";
 import NewBlogForm from "./components/NewBlogForm.jsx";
-import blog from "./components/Blog.jsx";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -21,7 +20,7 @@ const App = () => {
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
-            setBlogs( blogs )
+            setBlogs(blogs.sort((a, b) => b.likes - a.likes))
         )
     }, [])
 
@@ -156,7 +155,7 @@ const App = () => {
         }
         blogService.create(newBlog)
             .then(returnedBlog => {
-                setBlogs(blogs.concat(returnedBlog))
+                setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
                 setNewBlog('')
                 setTitle('')
                 setAuthor('')
@@ -174,7 +173,11 @@ const App = () => {
 
         try {
             const updatedBlog =  await blogService.addLikeToBlog(blog)
-            setBlogs(blogs.map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog)))
+            setBlogs(blogs
+                .map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog))
+                .sort((a, b) => b.likes - a.likes)
+            )
+
             setNotification(`added like to blog' '${blog.title}'`)
             setTimeout(() => setNotification(null), 2000)
         } catch{
@@ -187,7 +190,10 @@ const App = () => {
     const deleteBlog = async (id) => {
         try {
             await blogService.removeBlog(id)
-            setBlogs(blogs.filter(blog => blog.id !== id))
+            setBlogs(blogs
+                .filter(blog => blog.id !== id)
+                .sort((a, b) => b.likes - a.likes)
+            )
         } catch {
             setNotification(`Can not delete blog post`)
             setMessageType('error')
