@@ -19,12 +19,12 @@ const App = () => {
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
-            setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+            setBlogs(blogs.data.sort((a, b) => b.likes - a.likes))
         )
     }, [])
 
     useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+        const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
             setUser(user)
@@ -51,7 +51,7 @@ const App = () => {
             const user = await loginService.login({ username, password })
 
             window.localStorage.setItem(
-                'loggedNoteappUser', JSON.stringify(user)
+                'loggedNoteAppUser', JSON.stringify(user)
             )
             blogService.setToken(user.token)
             setUser(user)
@@ -96,7 +96,7 @@ const App = () => {
 
     const logout = async () => {
         setUser(null)
-        window.localStorage.removeItem('loggedNoteappUser')
+        window.localStorage.removeItem('loggedNoteAppUser')
     }
 
     const toggleLoginAndNoteForm = () => {
