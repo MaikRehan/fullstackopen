@@ -13,10 +13,11 @@ const Blog = ({ blog, addLikeToBlog, deleteBlog }) => {
     return (
         <div style={blogStyle}>
             <div>
-                {blog.title} {blog.author}
+                <div className="blogTitle">{blog.title}</div>{' '}
+                <div className="blogAuthor">{blog.author}</div>
                 <Togglable buttonLabel="show">
-                    <div>{blog.url}</div>
-                    <div>
+                    <div className="blogUrl">{blog.url}</div>
+                    <div className="blogLikes">
                         likes {blog.likes}
                         <button onClick={() => addLikeToBlog(blog)}>
                             like
