@@ -12,10 +12,6 @@ const App = () => {
     const [user, setUser] = useState(null)
     const [errorMessage, setNotification] = useState(null)
     const [messageType, setMessageType] = useState('notification')
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [url, setUrl] = useState('')
-
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -130,13 +126,7 @@ const App = () => {
                         <h2>create new</h2>
                         <Togglable buttonLabel="show">
                             <NewBlogForm
-                                handleSubmit={createBlog}
-                                handleTitleChange={({ target }) => setTitle(target.value)}
-                                handleAuthorChange={({ target }) => setAuthor(target.value)}
-                                handleUrlChange={({ target }) => setUrl(target.value)}
-                                title={ title }
-                                author={ author }
-                                url={ url }
+                                createBlog={createBlog}
                             />
                         </Togglable>
                     </div>
@@ -145,19 +135,10 @@ const App = () => {
         )
     }
 
-    const createBlog = event => {
-        event.preventDefault()
-        const newBlog = {
-            title: title,
-            author: author,
-            url: url,
-        }
+    const createBlog = (newBlog) => {
         blogService.create(newBlog)
             .then(returnedBlog => {
                 setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
-                setTitle('')
-                setAuthor('')
-                setUrl('')
                 setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
                 setTimeout(() => setNotification(null), 2000)
             })

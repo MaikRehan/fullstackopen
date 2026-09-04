@@ -1,47 +1,60 @@
+import {useEffect, useState} from "react";
+
+const NewBlogForm = ({ createBlog }) => {
+
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const addBlog = (event) => {
+        event.preventDefault()
+        createBlog({
+            title: title,
+            author: author,
+            url: url,
+        })
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
 
 
-const NewBlogForm = ({
-    handleSubmit,
-    handleTitleChange,
-    handleAuthorChange,
-    handleUrlChange,
-    title,
-    author,
-    url
-                     }) => (
-    <form onSubmit={handleSubmit}>
-        <div>
-            <label>
-                title
-                <input
-                    type="text"
-                    value={title}
-                    onChange={handleTitleChange}
-                />
-            </label>
-        </div>
-        <div>
-            <label>
-                author
-                <input
-                    type="text"
-                    value={author}
-                    onChange={handleAuthorChange}
-                />
-            </label>
-        </div>
-        <div>
-            <label>
-                url
-                <input
-                    type="text"
-                    value={url}
-                    onChange={handleUrlChange}
-                />
-            </label>
-        </div>
-        <button type="submit">save</button>
-    </form>
-)
+    return (
+        <form onSubmit={addBlog}>
+            <div>
+                <label>
+                    title
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={event => setTitle(event.target.value)}
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    author
+                    <input
+                        type="text"
+                        value={author}
+                        onChange={event => setAuthor(event.target.value)}
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    url
+                    <input
+                        type="text"
+                        value={url}
+                        onChange={event => setUrl(event.target.value)}
+                    />
+                </label>
+            </div>
+            <button type="submit">save</button>
+        </form>
+    )
+}
+
 
 export default NewBlogForm
