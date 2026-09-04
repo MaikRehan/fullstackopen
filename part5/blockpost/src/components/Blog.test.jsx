@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 import userEvent from '@testing-library/user-event'
-import {container} from "jsdom/lib/generated/css-property-descriptors.js";
 
 test('renders title and author, but not url or likes by default', async () => {
     const blog = {
@@ -25,7 +24,7 @@ test('renders title and author, but not url or likes by default', async () => {
     expect(likes).not.toBeVisible()
 })
 
-test('clicking the button calls event handler once', async () => {
+test('clicking the show button makes likes and url visible', async () => {
 
     const blog = {
         title: 'Testing blog',
@@ -34,19 +33,17 @@ test('clicking the button calls event handler once', async () => {
         likes: 7,
     }
 
+    const { container } = render(<Blog blog={blog} />)
 
-    const mockHandler = vi.fn()
-
-    render(
-        <Blog blog={blog}/>
-    )
-
+    const url = await screen.findByText(blog.url)
+    expect(url).not.toBeVisible()
+    const likes = container.querySelector('.blogLikes')
+    expect (likes).not.toBeVisible()
 
     const user = userEvent.setup()
     const button = screen.getByText('show')
     await user.click(button)
 
-
-    expect(screen.getByText('TestingURL')).toBeVisible()
-    expect(likes).not.toBeVisible()
+    expect(url).toBeVisible()
+    expect(likes).toBeVisible()
 })
