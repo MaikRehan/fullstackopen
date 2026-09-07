@@ -13,6 +13,8 @@ export default defineConfig({
     }
   },
   test: {
+    // Unit-Tests nur aus src/ - tests/ gehoert Playwright
+    include: ['src/**/*.{test,spec}.{js,jsx}'],
     environment: 'jsdom',
     globals: true,
     setupFiles: './testSetup.js',
