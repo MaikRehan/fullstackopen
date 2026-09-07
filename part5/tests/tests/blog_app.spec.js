@@ -1,8 +1,8 @@
 const {test, expect, beforeEach, describe} = require('@playwright/test')
-const { loginWith } = require('./helper')
+const {loginWith, createBlog} = require('./helper')
 
 describe('Blog app', () => {
-    beforeEach(async ({ page, request }) => {
+    beforeEach(async ({page, request}) => {
         await request.post('/api/testing/reset')
         await request.post('/api/users', {
             data: {
@@ -15,13 +15,13 @@ describe('Blog app', () => {
         await page.goto('/')
     })
 
-    test('Login form is shown', async ({ page }) => {
+    test('Login form is shown', async ({page}) => {
         const locator = page.getByText('Log in to application')
         await expect(locator).toBeVisible()
     })
 
     describe('Login', () => {
-        test('login fails with wrong password', async ({ page }) => {
+        test('login fails with wrong password', async ({page}) => {
             await loginWith(page, 'Maik', 'falsch')
 
             const errorDiv = page.locator('.error')
@@ -32,18 +32,21 @@ describe('Blog app', () => {
             await expect(page.getByText('Maik logged in')).not.toBeVisible()
         })
 
-        test('user can log in', async ({ page }) => {
+        test('user can log in', async ({page}) => {
             await loginWith(page, 'Maik', 'Maik')
             await expect(page.getByText('Maik logged in')).toBeVisible()
         })
 
         describe('When logged in', () => {
-            beforeEach(async ({ page }) => {
-                // ...
+            beforeEach(async ({page}) => {
+                await loginWith(page, 'Maik', 'Maik')
             })
 
-            test('a new blog can be created', async ({ page }) => {
-                // ...
+            test('a new blog can be created', async ({page}) => {
+                await createBlog(page, 'first note')
+                await createBlog(page, 'second note')
+                await createBlog(page, 'third note')
+                await page.getByText(content).waitFor()
             })
         })
     })
