@@ -99,6 +99,33 @@ describe('Blog app', () => {
                 await expect(page.getByRole('button', { name: 'like' })).toBeVisible()
                 await expect(page.getByRole('button', { name: 'delete' })).not.toBeVisible()
             })
+
+            test('blogs are ordered by amount of likes', async ({page}) => {
+
+                await createBlog(page, 'first note', 'author', 'url')
+                await page.getByText('first note', { exact: true }).waitFor()
+                await createBlog(page, 'second note', 'author', 'url')
+                await page.getByText('second note', { exact: true }).waitFor()
+                await createBlog(page, 'third note', 'author', 'url')
+                await page.getByText('third note', { exact: true }).waitFor()
+                await page.getByRole('button', { name: 'show' }).click()
+
+                const second = page.locator('.blog').filter({ hasText: 'second note' })
+                const third = page.locator('.blog').filter({ hasText: 'third note' })
+
+                await second.getByRole('button', { name: 'like' }).click()
+                await expect(second.getByText('likes 1')).toBeVisible()
+                await second.getByRole('button', { name: 'like' }).click()
+                await expect(second.getByText('likes 2')).toBeVisible()
+                await third.getByRole('button', { name: 'like' }).click()
+                await expect(third.getByText('likes 1')).toBeVisible()
+
+                const blogs = await page.locator('.blog').all()
+                console.log(blogs)
+                await expect(blogs[0]).toContainText('second note')
+                await expect(blogs[1]).toContainText('third note')
+                await expect(blogs[2]).toContainText('first note')
+            })
         })
     })
 })
