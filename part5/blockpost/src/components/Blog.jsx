@@ -1,6 +1,6 @@
 import Togglable from './Togglable.jsx'
 
-const Blog = ({ blog, addLikeToBlog, deleteBlog }) => {
+const Blog = ({blog, addLikeToBlog, deleteBlog}) => {
 
     const blogStyle = {
         paddingTop: 10,
@@ -13,23 +13,26 @@ const Blog = ({ blog, addLikeToBlog, deleteBlog }) => {
     return (
         <div style={blogStyle}>
             <div>
-                <div className="blogTitle">{blog.title}</div>{' '}
-                <div className="blogAuthor">{blog.author}</div>
-                <Togglable buttonLabel="show">
-                    <div className="blogUrl">{blog.url}</div>
-                    <div className="blogLikes">
-                        likes {blog.likes}
-                        <button onClick={() => addLikeToBlog(blog)}>
-                            like
-                        </button>
-                    </div>
-                    <div>{blog.user?.name}</div>
-                    <div>
-                        <button onClick={() => deleteBlog(blog.id)}>
-                            delete
-                        </button>
-                    </div>
-                </Togglable>
+                <span>
+                    <div className="blogTitle">{blog.title}</div>
+                    {' '}
+                    <div className="blogAuthor">{blog.author}</div>
+                    <Togglable buttonLabel="show">
+                        <div className="blogUrl">{blog.url}</div>
+                        <div className="blogLikes">
+                            likes {blog.likes}
+                            <button onClick={() => addLikeToBlog(blog)}>
+                                like
+                            </button>
+                        </div>
+                        <div>{blog.user?.name}</div>
+                        <div>
+                            <button onClick={() => deleteBlog(blog.id)}>
+                                delete
+                            </button>
+                        </div>
+                    </Togglable>
+                </span>
             </div>
         </div>
     )

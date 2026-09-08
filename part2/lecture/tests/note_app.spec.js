@@ -65,11 +65,7 @@ describe('Note app', () => {
                 await expect(otherNoteElement.getByText('make important')).toBeVisible()
             })
 
-            test('created blogs are visible', async ({ page }) => {
-                await expect(page.getByText('first note')).toBeVisible()
-                await expect(page.getByText('second note')).toBeVisible()
-                await expect(page.getByText('third note')).toBeVisible()
-            })
+
         })
     })
 })

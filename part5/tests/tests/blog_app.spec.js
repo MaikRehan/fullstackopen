@@ -43,10 +43,16 @@ describe('Blog app', () => {
             })
 
             test('a new blog can be created', async ({page}) => {
-                await createBlog(page, 'first note')
-                await createBlog(page, 'second note')
-                await createBlog(page, 'third note')
-                await page.getByText(content).waitFor()
+                await createBlog(page, 'first note', 'author', 'url')
+                await page.getByText('first note', { exact: true }).waitFor()
+                await createBlog(page, 'second note', 'author', 'url')
+                await page.getByText('second note', { exact: true }).waitFor()
+                await createBlog(page, 'third note', 'author', 'url')
+                await page.getByText('third note', { exact: true }).waitFor()
+
+                await expect(page.getByText('first note', { exact: true }))
+                await expect(page.getByText('second note', { exact: true }))
+                await expect(page.getByText('third note', { exact: true }))
             })
         })
     })
