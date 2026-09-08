@@ -11,7 +11,13 @@ describe('Blog app', () => {
                 password: 'Maik'
             }
         })
-
+        await request.post('/api/users', {
+            data: {
+                name: 'Test',
+                username: 'Test',
+                password: 'Test'
+            }
+        })
         await page.goto('/')
     })
 
@@ -50,9 +56,9 @@ describe('Blog app', () => {
                 await createBlog(page, 'third note', 'author', 'url')
                 await page.getByText('third note', { exact: true }).waitFor()
 
-                await expect(page.getByText('first note', { exact: true }))
-                await expect(page.getByText('second note', { exact: true }))
-                await expect(page.getByText('third note', { exact: true }))
+                await expect(page.getByText('first note', { exact: true })).toBeVisible()
+                await expect(page.getByText('second note', { exact: true })).toBeVisible()
+                await expect(page.getByText('third note', { exact: true })).toBeVisible()
             })
 
             test('a new blog can be liked', async ({page}) => {
@@ -64,6 +70,19 @@ describe('Blog app', () => {
 
                 await page.getByRole('button', { name: 'like' }).click()
                 await expect(page.getByText('likes 1')).toBeVisible()
+            })
+
+            test('user who created a blog can delete it', async ({page}) => {
+                await createBlog(page, 'first note', 'author', 'url')
+                await page.getByText('first note', { exact: true }).waitFor()
+                await expect(page.getByText('first note', { exact: true })).toBeVisible()
+
+                page.once('dialog', dialog => dialog.accept())
+
+                await page.getByRole('button', { name: 'show' }).click()
+                await page.getByRole('button', { name: 'delete' }).click()
+
+                await expect(page.getByText('first note', { exact: true })).not.toBeVisible()
             })
         })
     })
