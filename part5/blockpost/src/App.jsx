@@ -113,13 +113,15 @@ const App = () => {
                     (
                     <div>
                         <p>{user.name} logged in</p>
-                        <button onClick={() => logout()}>logout</button>
+                        <button className="logoutButton"
+                                onClick={() => logout()}>logout</button>
                         {blogs.map(blog =>
                             <Blog
                                   key={blog.id}
                                   blog={blog}
                                   addLikeToBlog={addLikeToBlog}
                                   deleteBlog={deleteBlog}
+                                  showDeleteButton={showDeleteButton}
                             >
                             </Blog>
                         )}
@@ -164,6 +166,12 @@ const App = () => {
             setNotification('Can not add like to blog post')
             setMessageType('error')
             setTimeout(() => setNotification(null), 2000)
+        }
+    }
+
+    const showDeleteButton = (blog) => {
+        if(blog.user.username === user.username) {
+            return true
         }
     }
 

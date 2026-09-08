@@ -84,6 +84,21 @@ describe('Blog app', () => {
 
                 await expect(page.getByText('first note', { exact: true })).not.toBeVisible()
             })
+
+            test('user cannot see delete button for blog of other user', async ({page}) => {
+                await createBlog(page, 'first note', 'author', 'url')
+                await page.getByText('first note', { exact: true }).waitFor()
+                await expect(page.getByText('first note', { exact: true })).toBeVisible()
+
+                await page.getByRole('button', { name: 'logout' }).click()
+                await page.getByText('Log in to application', { exact: true }).waitFor()
+                await loginWith(page, 'Test', 'Test')
+                await page.getByText('first note', { exact: true }).waitFor()
+
+                await page.locator('span').getByRole('button', { name: 'show' }).click()
+                await expect(page.getByRole('button', { name: 'like' })).toBeVisible()
+                await expect(page.getByRole('button', { name: 'delete' })).not.toBeVisible()
+            })
         })
     })
 })

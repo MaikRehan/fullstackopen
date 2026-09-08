@@ -1,6 +1,6 @@
 import Togglable from './Togglable.jsx'
 
-const Blog = ({blog, addLikeToBlog, deleteBlog}) => {
+const Blog = ({blog, addLikeToBlog, deleteBlog, showDeleteButton}) => {
 
     const blogStyle = {
         paddingTop: 10,
@@ -27,9 +27,11 @@ const Blog = ({blog, addLikeToBlog, deleteBlog}) => {
                         </div>
                         <div>{blog.user?.name}</div>
                         <div>
-                            <button onClick={() => deleteBlog(blog.id)}>
-                                delete
-                            </button>
+                            {showDeleteButton(blog) && (
+                                <button onClick={() => deleteBlog(blog.id)}>
+                                    delete
+                                </button>
+                            )}
                         </div>
                     </Togglable>
                 </span>
