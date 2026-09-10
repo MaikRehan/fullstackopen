@@ -6,6 +6,8 @@ import Togglable from './components/Togglable.jsx'
 import NewBlogForm from './components/NewBlogForm.jsx'
 import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import Login from "./components/Login";
+import BlogView from "./components/Blogview";
+
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -202,6 +204,14 @@ const App = () => {
                     </button>)}
             </div>
             <Routes>
+                <Route path="/blogs/:id" element={
+                                              <BlogView
+                                                 blogs={blogs}
+                                                 addLikeToBlog={addLikeToBlog}
+                                                 deleteBlog={deleteBlog}
+                                                 showDeleteButton={showDeleteButton}
+                                             />
+                                         }/>
                 <Route path="/" element={toggleLoginAndNoteForm()}/>
                 <Route path="/login" element={
                                           <Login
