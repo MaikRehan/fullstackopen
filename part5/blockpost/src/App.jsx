@@ -215,6 +215,7 @@ const App = () => {
                     <Route path="/blogs/:id" element={
                                                   <BlogView
                                                      blogs={blogs}
+                                                     user={user}
                                                      addLikeToBlog={addLikeToBlog}
                                                      deleteBlog={deleteBlog}
                                                      showDeleteButton={showDeleteButton}

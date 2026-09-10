@@ -1,5 +1,5 @@
 const {test, expect, beforeEach, describe} = require('@playwright/test')
-const {loginWith, createBlog} = require('./helper')
+const {loginWith, createBlog, openBlog} = require('./helper')
 
 describe('Blog app', () => {
     beforeEach(async ({page, request}) => {
@@ -21,11 +21,6 @@ describe('Blog app', () => {
         await page.goto('/')
     })
 
-    test('Login form is shown', async ({page}) => {
-        const locator = page.getByText('Log in to application')
-        await expect(locator).toBeVisible()
-    })
-
     describe('Login', () => {
         test('login fails with wrong password', async ({page}) => {
             await loginWith(page, 'Maik', 'falsch')
@@ -35,12 +30,14 @@ describe('Blog app', () => {
             await expect(errorDiv).toHaveCSS('border-style', 'solid')
             await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
 
-            await expect(page.getByText('Maik logged in')).not.toBeVisible()
-        })
+            await expect(page.getByRole('button', { name: 'logout' })).not.toBeVisible()                                                                                           })
 
         test('user can log in', async ({page}) => {
             await loginWith(page, 'Maik', 'Maik')
-            await expect(page.getByText('Maik logged in')).toBeVisible()
+
+            await expect(page.getByRole('button', { name: 'logout' })).toBeVisible()
+            await expect(page.getByRole('link', { name: 'createBlog' })).toBeVisible()
+            await expect(page.getByRole('link', { name: 'login' })).not.toBeVisible()
         })
 
         describe('When logged in', () => {
@@ -49,40 +46,31 @@ describe('Blog app', () => {
             })
 
             test('a new blog can be created', async ({page}) => {
-                await createBlog(page, 'first note', 'author', 'url')
-                await page.getByText('first note', { exact: true }).waitFor()
+                await createBlog(page, 'first blog', 'author', 'url')
+                await expect(page.getByText('first blog — author', { exact: true })).toBeVisible()
                 await createBlog(page, 'second note', 'author', 'url')
-                await page.getByText('second note', { exact: true }).waitFor()
+                await expect(page.getByText('second note — author', { exact: true })).toBeVisible()
                 await createBlog(page, 'third note', 'author', 'url')
-                await page.getByText('third note', { exact: true }).waitFor()
-
-                await expect(page.getByText('first note', { exact: true })).toBeVisible()
-                await expect(page.getByText('second note', { exact: true })).toBeVisible()
-                await expect(page.getByText('third note', { exact: true })).toBeVisible()
+                await expect(page.getByText('third note — author', { exact: true })).toBeVisible()
             })
 
             test('a new blog can be liked', async ({page}) => {
                 await createBlog(page, 'first note', 'Maik', 'url')
-                await page.getByText('first note', { exact: true }).waitFor()
-
-                await page.getByRole('button', { name: 'show' }).click()
+                await page.getByText('first note — Maik', { exact: true }).click()
                 await expect(page.getByText('likes 0')).toBeVisible()
-
                 await page.getByRole('button', { name: 'like' }).click()
                 await expect(page.getByText('likes 1')).toBeVisible()
             })
 
             test('user who created a blog can delete it', async ({page}) => {
-                await createBlog(page, 'first note', 'author', 'url')
-                await page.getByText('first note', { exact: true }).waitFor()
-                await expect(page.getByText('first note', { exact: true })).toBeVisible()
+                await createBlog(page, 'first blog', 'author', 'url')
+                await page.getByText('first blog — author', { exact: true }).click()
 
                 page.once('dialog', dialog => dialog.accept())
 
-                await page.getByRole('button', { name: 'show' }).click()
                 await page.getByRole('button', { name: 'delete' }).click()
 
-                await expect(page.getByText('first note', { exact: true })).not.toBeVisible()
+                await expect(page.getByText('first blog — author', { exact: true })).not.toBeVisible()
             })
 
             test('user cannot see delete button for blog of other user', async ({page}) => {
