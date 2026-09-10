@@ -1,71 +1,67 @@
 import { render, screen } from '@testing-library/react'
-import Blog from './Blog'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
+import BlogView from './BlogView'
 
-test('renders title and author, but not url or likes by default', async () => {
-    const blog = {
-        title: 'Testing blog',
-        author: 'Testing author',
-        url: 'Testing URL',
-        likes: 7,
-    }
+const blog = {
+    id: '1',
+    title: 'Testing blog',
+    author: 'Testing author',
+    url: 'test-url.com',
+    likes: 7,
+    user: { username: 'creator', name: 'Blog Creator' },
+}
 
-    const { container } = render(<Blog blog={blog} />)
+const creator = { username: 'creator', name: 'Blog Creator' }
+const otherUser = { username: 'other', name: 'Other User' }
 
-    const title = await screen.findByText(blog.title)
-    const author = await screen.findByText(blog.author)
+const showDeleteButton = user => b =>
+    user !== null && b.user.username === user.username
 
-    expect(title).toBeDefined()
-    expect(author).toBeDefined()
+const renderBlogView = (user, handlers = {}) =>
+    render(
+        <MemoryRouter initialEntries={['/blogs/1']}>
+            <Routes>
+                <Route path="/blogs/:id" element={
+                                              <BlogView
+                                                 blogs={[blog]}
+                                                 user={user}
+                                                 addLikeToBlog={handlers.addLikeToBlog ?? vi.fn()}
+                                                 deleteBlog={handlers.deleteBlog ?? vi.fn()}
+                                                 showDeleteButton={showDeleteButton(user)}
+                                             />
+                                         }/>
+            </Routes>
+        </MemoryRouter>
+    )
 
-    const url = await screen.findByText(blog.url)
-    const likes = container.querySelector('.blogLikes')
-    expect(url).not.toBeVisible()
-    expect(likes).not.toBeVisible()
+test('shows blog details and no buttons to an unauthenticated user', () => {
+    renderBlogView(null)
+
+    expect(screen.getByText(`${blog.title} — ${blog.author}`)).toBeVisible()
+    expect(screen.getByText(blog.url)).toBeVisible()
+    expect(screen.getByText('likes 7')).toBeVisible()
+
+    expect(screen.queryByRole('button', { name: 'like' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'delete' })).toBeNull()
 })
 
-test('clicking the show button makes likes and url visible', async () => {
+test('shows only the like button to a logged-in user who is not the creator', () => {
+    renderBlogView(otherUser)
 
-    const blog = {
-        title: 'Testing blog',
-        author: 'Testing author',
-        url: 'Testing URL',
-        likes: 7,
-    }
-
-    const { container } = render(<Blog blog={blog} />)
-
-    const url = await screen.findByText(blog.url)
-    expect(url).not.toBeVisible()
-    const likes = container.querySelector('.blogLikes')
-    expect (likes).not.toBeVisible()
-
-    const user = userEvent.setup()
-    const button = screen.getByText('show')
-    await user.click(button)
-
-    expect(url).toBeVisible()
-    expect(likes).toBeVisible()
+    expect(screen.getByText('likes 7')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'like' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'delete' })).toBeNull()
 })
 
-test('clicking the like button twice calls event handler twice', async () => {
+test('shows the delete button to the creator of the blog', async () => {
+    const addLikeToBlog = vi.fn()
+    renderBlogView(creator, { addLikeToBlog })
 
-    const blog = {
-        title: 'Testing blog',
-        author: 'Testing author',
-        url: 'Testing URL',
-        likes: 7,
-    }
+    expect(screen.getByRole('button', { name: 'like' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'delete' })).toBeVisible()
 
-    const mockHandler = vi.fn()
-    render(<Blog blog={blog} addLikeToBlog={mockHandler} />)
-    const user = userEvent.setup()
-    const button = screen.getByText('like')
-
-    await user.click(button)
-    expect(mockHandler.mock.calls).toHaveLength(1)
-
-    await user.click(button)
-    expect(mockHandler.mock.calls).toHaveLength(2)
-
+    const testUser = userEvent.setup()
+    await testUser.click(screen.getByRole('button', { name: 'like' }))
+    expect(addLikeToBlog.mock.calls).toHaveLength(1)
 })

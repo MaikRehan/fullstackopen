@@ -38,9 +38,7 @@ const App = () => {
     const navigate = useNavigate()
 
     const Notification = ({message, messageType}) => {
-        if (message === null) {
-            return null
-        }
+        if (!message) return null
 
         return (<div className={messageType}>
             {message}
@@ -201,6 +199,7 @@ const App = () => {
         return (
 
             <div>
+                <Notification message={errorMessage} messageType={messageType} />
                 <div>
                     <Link style={padding} to="/">blogs</Link>
                     {!user && (<Link style={padding} to="/login">login</Link>)}
@@ -230,7 +229,6 @@ const App = () => {
                     />
                     <Route path="/createBlog" element={createBlogForm()}/>
                 </Routes>
-                <Notification/>
             </div>)
     }
 

@@ -1,20 +1,17 @@
 import { useParams } from 'react-router-dom'
 
-const BlogView = ({ blogs, addLikeToBlog, deleteBlog, showDeleteButton }) => {
+const BlogView = ({ blogs, user, addLikeToBlog, deleteBlog, showDeleteButton }) => {
     const id = useParams().id
     const blog = blogs.find(b => b.id === id)
-
-    if (!blog) {
-        return null
-    }
+    if (!blog) return null
 
     return (
-        <div>
+        <div className="blog">
             <h2>{blog.title} — {blog.author}</h2>
             <div><a href={blog.url}>{blog.url}</a></div>
             <div>
-                likes {blog.likes}
-                <button onClick={() => addLikeToBlog(blog)}>like</button>
+                <span className="blogLikes">likes {blog.likes}</span>
+                {user && <button onClick={() => addLikeToBlog(blog)}>like</button>}
             </div>
             <div>added by {blog.user?.name}</div>
             {showDeleteButton(blog) && (
