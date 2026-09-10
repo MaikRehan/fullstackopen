@@ -101,7 +101,7 @@ const App = () => {
         window.localStorage.removeItem('loggedNoteAppUser')
     }
 
-    const toggleLoginAndNoteForm = () => {
+    const renderBlogs = () => {
         return (<div>
             <h2>blogs</h2>
             <div>
@@ -113,115 +113,125 @@ const App = () => {
                     showDeleteButton={showDeleteButton}
                 >
                 </Blog>)}
-                <h2>create new</h2>
-                <Togglable buttonLabel="show">
-                    <NewBlogForm
-                        createBlog={createBlog}
-                    />
-                </Togglable>
             </div>
         </div>)
     }
 
-    const createBlog = (newBlog) => {
-        blogService.create(newBlog)
-            .then(returnedBlog => {
-                setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
-                setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
-                setTimeout(() => setNotification(null), 2000)
-            })
-            .catch(() => {
-                setNotification('Can not add new blog post')
-                setMessageType('error')
-                setTimeout(() => setNotification(null), 2000)
-            })
-    }
+    const createBlogForm = () => {
+        return (
+            <div>
+                <h2>create new</h2>
+                <NewBlogForm
+                    createBlog={createBlog}
+                />
+            </div>
+        )}
 
-    const addLikeToBlog = async (blog) => {
-
-        try {
-            const updatedBlog = await blogService.addLikeToBlog(blog)
-            setBlogs(blogs
-                .map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog))
-                .sort((a, b) => b.likes - a.likes))
-
-            setNotification(`added like to blog' '${blog.title}'`)
-            setTimeout(() => setNotification(null), 2000)
-        } catch {
-            setNotification('Can not add like to blog post')
-            setMessageType('error')
-            setTimeout(() => setNotification(null), 2000)
-        }
-    }
-
-    const showDeleteButton = (blog) => {
-        if (user === null) {
-            return false
-        }
-        if (blog.user.username === user.username) {
-            return true
-        }
-    }
-
-    const deleteBlog = async (id) => {
-        const blogToBeDeleted = blogs.find(blog => blog.id === id)
-        console.log(blogToBeDeleted)
-        console.log(user)
-        if (user.username !== blogToBeDeleted.user.username) {
-            setNotification('This blog was not written by you and therefore can not be deleted')
-            setMessageType('error')
-            setTimeout(() => setNotification(null), 2000)
-            return
+        const createBlog = (newBlog) => {
+            blogService.create(newBlog)
+                .then(returnedBlog => {
+                    setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
+                    setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
+                    setTimeout(() => setNotification(null), 2000)
+                    navigate('/')
+                })
+                .catch(() => {
+                    setNotification('Can not add new blog post')
+                    setMessageType('error')
+                    setTimeout(() => setNotification(null), 2000)
+                })
         }
 
-        if (window.confirm('Are you sure you want to delete this entry?')) {
+        const addLikeToBlog = async (blog) => {
+
             try {
-                await blogService.removeBlog(id)
+                const updatedBlog = await blogService.addLikeToBlog(blog)
                 setBlogs(blogs
-                    .filter(blog => blog.id !== id)
+                    .map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog))
                     .sort((a, b) => b.likes - a.likes))
+
+                setNotification(`added like to blog' '${blog.title}'`)
+                setTimeout(() => setNotification(null), 2000)
             } catch {
-                setNotification('Can not delete blog post')
+                setNotification('Can not add like to blog post')
                 setMessageType('error')
                 setTimeout(() => setNotification(null), 2000)
             }
         }
-    }
 
-    const padding = {
-        padding: 5
-    }
+        const showDeleteButton = (blog) => {
+            if (user === null) {
+                return false
+            }
+            if (blog.user.username === user.username) {
+                return true
+            }
+        }
 
-    return (
+        const deleteBlog = async (id) => {
+            const blogToBeDeleted = blogs.find(blog => blog.id === id)
+            console.log(blogToBeDeleted)
+            console.log(user)
+            if (user.username !== blogToBeDeleted.user.username) {
+                setNotification('This blog was not written by you and therefore can not be deleted')
+                setMessageType('error')
+                setTimeout(() => setNotification(null), 2000)
+                return
+            }
 
-        <div>
+            if (window.confirm('Are you sure you want to delete this entry?')) {
+                try {
+                    await blogService.removeBlog(id)
+                    setBlogs(blogs
+                        .filter(blog => blog.id !== id)
+                        .sort((a, b) => b.likes - a.likes))
+                    navigate('/')
+                } catch {
+                    setNotification('Can not delete blog post')
+                    setMessageType('error')
+                    setTimeout(() => setNotification(null), 2000)
+                }
+            }
+        }
+
+        const padding = {
+            padding: 5
+        }
+
+        return (
+
             <div>
-                <Link style={padding} to="/">blogs</Link>
-                {!user && (<Link style={padding} to="/login">login</Link>)}
-                {user && (
-                    <button className="logout"
-                            onClick={() => logout()}>logout
-                    </button>)}
-            </div>
-            <Routes>
-                <Route path="/blogs/:id" element={
-                                              <BlogView
-                                                 blogs={blogs}
-                                                 addLikeToBlog={addLikeToBlog}
-                                                 deleteBlog={deleteBlog}
-                                                 showDeleteButton={showDeleteButton}
-                                             />
-                                         }/>
-                <Route path="/" element={toggleLoginAndNoteForm()}/>
-                <Route path="/login" element={
-                                          <Login
-                                             user={user}
-                                             loginForm={loginForm}
-                                         />}
-                />
-            </Routes>
-            <Notification/>
-        </div>)
-}
+                <div>
+                    <Link style={padding} to="/">blogs</Link>
+                    {!user && (<Link style={padding} to="/login">login</Link>)}
+                    {user && (
+                        <button className="logout"
+                                onClick={() => logout()}>logout
+                        </button>)}
+                    {user && (
+                    <Link style={padding} to="/createBlog">createBlog</Link>
+                    )}
+                </div>
+                <Routes>
+                    <Route path="/blogs/:id" element={
+                                                  <BlogView
+                                                     blogs={blogs}
+                                                     addLikeToBlog={addLikeToBlog}
+                                                     deleteBlog={deleteBlog}
+                                                     showDeleteButton={showDeleteButton}
+                                                 />
+                                             }/>
+                    <Route path="/" element={renderBlogs()}/>
+                    <Route path="/login" element={
+                                              <Login
+                                                 user={user}
+                                                 loginForm={loginForm}
+                                             />}
+                    />
+                    <Route path="/createBlog" element={createBlogForm()}/>
+                </Routes>
+                <Notification/>
+            </div>)
+    }
 
-export default App
+    export default App
