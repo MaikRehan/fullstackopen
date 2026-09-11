@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
+import {TextField, Button} from '@mui/material'
 
-const NewBlogForm = ({ createBlog }) => {
+const NewBlogForm = ({createBlog}) => {
 
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
@@ -22,36 +23,28 @@ const NewBlogForm = ({ createBlog }) => {
     return (
         <form onSubmit={addBlog}>
             <div>
-                <label>
-                    title
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={event => setTitle(event.target.value)}
-                    />
-                </label>
+                <TextField
+                    placeholder="write title here"
+                    value={title}
+                    onChange={event => setTitle(event.target.value)}
+                />
             </div>
             <div>
-                <label>
-                    author
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={event => setAuthor(event.target.value)}
-                    />
-                </label>
+                <TextField
+                    placeholder="author"
+                    value={author}
+                    onChange={event => setAuthor(event.target.value)}
+                />
             </div>
-            <div>
-                <label>
-                    url
-                    <input
-                        type="text"
-                        value={url}
-                        onChange={event => setUrl(event.target.value)}
-                    />
-                </label>
+            <div><TextField
+                placeholder="URL"
+                value={url}
+                onChange={event => setUrl(event.target.value)}
+            />
             </div>
-            <button type="submit">save</button>
+            <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
+                save
+            </Button>
         </form>
     )
 }

@@ -7,7 +7,7 @@ import NewBlogForm from './components/NewBlogForm.jsx'
 import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import Login from "./components/Login";
 import BlogView from "./components/Blogview";
-
+import {Container} from '@mui/material'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -123,83 +123,84 @@ const App = () => {
                     createBlog={createBlog}
                 />
             </div>
-        )}
+        )
+    }
 
-        const createBlog = (newBlog) => {
-            blogService.create(newBlog)
-                .then(returnedBlog => {
-                    setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
-                    setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
-                    setTimeout(() => setNotification(null), 2000)
-                    navigate('/')
-                })
-                .catch(() => {
-                    setNotification('Can not add new blog post')
-                    setMessageType('error')
-                    setTimeout(() => setNotification(null), 2000)
-                })
+    const createBlog = (newBlog) => {
+        blogService.create(newBlog)
+            .then(returnedBlog => {
+                setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
+                setNotification(`a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`)
+                setTimeout(() => setNotification(null), 2000)
+                navigate('/')
+            })
+            .catch(() => {
+                setNotification('Can not add new blog post')
+                setMessageType('error')
+                setTimeout(() => setNotification(null), 2000)
+            })
+    }
+
+    const addLikeToBlog = async (blog) => {
+
+        try {
+            const updatedBlog = await blogService.addLikeToBlog(blog)
+            setBlogs(blogs
+                .map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog))
+                .sort((a, b) => b.likes - a.likes))
+
+            setNotification(`added like to blog' '${blog.title}'`)
+            setTimeout(() => setNotification(null), 2000)
+        } catch {
+            setNotification('Can not add like to blog post')
+            setMessageType('error')
+            setTimeout(() => setNotification(null), 2000)
+        }
+    }
+
+    const showDeleteButton = (blog) => {
+        if (user === null) {
+            return false
+        }
+        if (blog.user.username === user.username) {
+            return true
+        }
+    }
+
+    const deleteBlog = async (id) => {
+        const blogToBeDeleted = blogs.find(blog => blog.id === id)
+        console.log(blogToBeDeleted)
+        console.log(user)
+        if (user.username !== blogToBeDeleted.user.username) {
+            setNotification('This blog was not written by you and therefore can not be deleted')
+            setMessageType('error')
+            setTimeout(() => setNotification(null), 2000)
+            return
         }
 
-        const addLikeToBlog = async (blog) => {
-
+        if (window.confirm('Are you sure you want to delete this entry?')) {
             try {
-                const updatedBlog = await blogService.addLikeToBlog(blog)
+                await blogService.removeBlog(id)
                 setBlogs(blogs
-                    .map(blog => (blog.id !== updatedBlog.id ? blog : updatedBlog))
+                    .filter(blog => blog.id !== id)
                     .sort((a, b) => b.likes - a.likes))
-
-                setNotification(`added like to blog' '${blog.title}'`)
-                setTimeout(() => setNotification(null), 2000)
+                navigate('/')
             } catch {
-                setNotification('Can not add like to blog post')
+                setNotification('Can not delete blog post')
                 setMessageType('error')
                 setTimeout(() => setNotification(null), 2000)
             }
         }
+    }
 
-        const showDeleteButton = (blog) => {
-            if (user === null) {
-                return false
-            }
-            if (blog.user.username === user.username) {
-                return true
-            }
-        }
+    const padding = {
+        padding: 5
+    }
 
-        const deleteBlog = async (id) => {
-            const blogToBeDeleted = blogs.find(blog => blog.id === id)
-            console.log(blogToBeDeleted)
-            console.log(user)
-            if (user.username !== blogToBeDeleted.user.username) {
-                setNotification('This blog was not written by you and therefore can not be deleted')
-                setMessageType('error')
-                setTimeout(() => setNotification(null), 2000)
-                return
-            }
-
-            if (window.confirm('Are you sure you want to delete this entry?')) {
-                try {
-                    await blogService.removeBlog(id)
-                    setBlogs(blogs
-                        .filter(blog => blog.id !== id)
-                        .sort((a, b) => b.likes - a.likes))
-                    navigate('/')
-                } catch {
-                    setNotification('Can not delete blog post')
-                    setMessageType('error')
-                    setTimeout(() => setNotification(null), 2000)
-                }
-            }
-        }
-
-        const padding = {
-            padding: 5
-        }
-
-        return (
-
+    return (
+        <Container>
             <div>
-                <Notification message={errorMessage} messageType={messageType} />
+                <Notification message={errorMessage} messageType={messageType}/>
                 <div>
                     <Link style={padding} to="/">blogs</Link>
                     {!user && (<Link style={padding} to="/login">login</Link>)}
@@ -208,7 +209,7 @@ const App = () => {
                                 onClick={() => logout()}>logout
                         </button>)}
                     {user && (
-                    <Link style={padding} to="/createBlog">createBlog</Link>
+                        <Link style={padding} to="/createBlog">createBlog</Link>
                     )}
                 </div>
                 <Routes>
@@ -230,7 +231,8 @@ const App = () => {
                     />
                     <Route path="/createBlog" element={createBlogForm()}/>
                 </Routes>
-            </div>)
-    }
+            </div>
+        </Container>)
+}
 
-    export default App
+export default App
