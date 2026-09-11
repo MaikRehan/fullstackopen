@@ -7,7 +7,7 @@ import NewBlogForm from './components/NewBlogForm.jsx'
 import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import Login from "./components/Login";
 import BlogView from "./components/Blogview";
-import {Container} from '@mui/material'
+import {AppBar, Button, Container, Toolbar} from '@mui/material'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -201,17 +201,34 @@ const App = () => {
         <Container>
             <div>
                 <Notification message={errorMessage} messageType={messageType}/>
-                <div>
-                    <Link style={padding} to="/">blogs</Link>
-                    {!user && (<Link style={padding} to="/login">login</Link>)}
-                    {user && (
-                        <button className="logout"
-                                onClick={() => logout()}>logout
-                        </button>)}
-                    {user && (
-                        <Link style={padding} to="/createBlog">createBlog</Link>
-                    )}
-                </div>
+                <AppBar>
+                    <Toolbar>
+                        <Button
+                            variant="contained"
+                            style={{marginTop: 10, background: 'lightblue', color: 'white'}}>
+                            <Link to="/">blogs</Link></Button>
+                        {!user && (
+                            <Button
+                                variant="contained"
+                                style={{marginTop: 10, background: 'lightblue', color: 'white'}}>
+                                <Link to="/login">login</Link></Button>
+                        )}
+                        {user && (
+                            <Button
+                                variant="contained"
+                                style={{marginTop: 10, background: 'blueviolet', color: 'white'}}
+                                className="logout"
+                                onClick={() => logout()}>
+                                logout
+                            </Button>)}
+                        {user && (
+                            <Button
+                                variant="contained"
+                                style={{marginTop: 10, background: 'lightblue', color: 'white'}}>
+                                <Link to="/createBlog">createBlog</Link></Button>
+                        )}
+                    </Toolbar>
+                </AppBar>
                 <Routes>
                     <Route path="/blogs/:id" element={
                                                   <BlogView
