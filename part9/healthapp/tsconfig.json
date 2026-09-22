@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "noImplicitAny": false,
-    "noEmit": true,
     "types": ["node"],
     "moduleDetection": "force",
     "target": "esnext",
@@ -11,6 +10,8 @@
     "noFallthroughCasesInSwitch": true,
     "module": "nodenext",
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+
   }
 }
