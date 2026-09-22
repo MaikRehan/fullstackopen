@@ -16,19 +16,19 @@ const parseArguments = (args: string[]): CalculateBmi => {
         return {
             value1: Number(args[2]),
             value2: Number(args[3])
-        }
+        };
     } else {
         throw new Error('Provided values were not numbers!');
     }
-}
+};
 
 const calculateBmi = (mass: number, height: number): CalculateBmiResponse => {
     const bmiValue = (mass / ((height / 100) * (height / 100)));
-    let bmi = ''
+    let bmi = '';
     if (bmiValue < 0) {
         throw new Error('malformatted parameters');
     } else if (bmiValue < 18.5) {
-        bmi = 'Underweight'
+        bmi = 'Underweight';
     } else if (bmiValue > 18.5 && bmiValue < 25) {
         bmi = 'Normal range';
     } else if (bmiValue > 25 && bmiValue < 30) {
@@ -40,14 +40,14 @@ const calculateBmi = (mass: number, height: number): CalculateBmiResponse => {
         weight: mass,
         height: height,
         bmi: bmi
-    }
-}
+    };
+};
 if (process.argv[1] === import.meta.filename) {
     try {
         const {value1, value2} = parseArguments(process.argv);
-        calculateBmi(value1, value2)
+        calculateBmi(value1, value2);
     } catch (error: unknown) {
-        let errorMessage = 'Something bad happened.'
+        let errorMessage = 'Something bad happened.';
         if (error instanceof Error) {
             errorMessage += ' Error: ' + error.message;
         }
@@ -56,4 +56,4 @@ if (process.argv[1] === import.meta.filename) {
 }
 
 
-export default {calculateBmi}
+export default { calculateBmi };

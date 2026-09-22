@@ -1,5 +1,5 @@
 import express from 'express';
-import bmiCalculator from './bmiCalculator.ts'
+import bmiCalculator from './bmiCalculator.ts';
 
 const app = express();
 
@@ -10,7 +10,7 @@ app.get('/hello', (_req, res) => {
 app.get('/bmi', (req, res) => {
     const height = Number(req.query.height);
     const weight = Number(req.query.weight);
-    const response = bmiCalculator.calculateBmi(weight, height)
+    const response = bmiCalculator.calculateBmi(weight, height);
 
     if (isNaN(height) || isNaN(weight)) {
         res.send({

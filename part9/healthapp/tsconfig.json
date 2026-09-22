@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "types": ["node"],
     "moduleDetection": "force",
     "target": "esnext",
