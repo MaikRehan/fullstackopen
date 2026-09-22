@@ -10,16 +10,21 @@
     "tsc": "tsc",
     "multiply": "tsc && node multiplicator.ts",
     "start": "node index.ts",
-    "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\""
+    "dev": "concurrently \"tsc --watch\" \"node --watch index.ts\"",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.5.1",
     "concurrently": "^10.0.5",
     "i": "^0.3.7",
-    "typescript": "^7.0.2"
+    "typescript": "6.0"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.11.0",
+    "express": "^5.2.1",
+    "typescript-eslint": "^8.70.1"
   }
 }
