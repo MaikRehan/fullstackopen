@@ -1,38 +1,21 @@
-/**
- *
+interface ParsedArguments {
+    values: number[]
+    target: number
+}
 
- interface ParsedArguments {
- value1: [number]
- value2: number
- }
- const parseArguments = (args: string[]): ParsedArguments => {
- if (args.length < 2) throw new Error('Not enough arguments');
+const parseArguments = (args: string[]): ParsedArguments => {
+    if (args.length < 4) throw new Error('Not enough arguments');
+    const valueArray = args.slice(3).map(Number)
 
- if (!isNaN(Number(args[0])) && !isNaN(Number(args[1]))) {
-
-
- return {
- paramter1: Number(args[2]),
- }
- } else {
- throw new Error('Provided values were not numbers!');
- }
-
- try {
- if (process.argv.length < 1) {
- calculateBmi(value1, value2)
- }
-
- } catch (error: unknown) {
- let errorMessage = 'Something bad happened.'
- if (error instanceof Error) {
- errorMessage += ' Error: ' + error.message;
- }
- }
- console.log(errorMessage);
- }
-
- */
+    if (!isNaN(Number(args[2])) && !valueArray.some(isNaN)) {
+        return {
+            values: valueArray,
+            target: Number(args[2])
+        }
+    } else {
+        throw new Error('Provided values were not numbers!');
+    }
+}
 
 interface ExerciseResults {
     periodLength: number
@@ -89,6 +72,13 @@ const calcExercises = (target: number, exercises: number[]): ExerciseResults => 
     }
 }
 
-const parameter1 = [3, 0, 2, 4.5, 0, 3, 1]
-const parameter2 = 2
-console.log(calcExercises(parameter2, parameter1))
+try {
+    const {target, values} = parseArguments(process.argv);
+    console.log(calcExercises(target, values))
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+        errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
+}
