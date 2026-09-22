@@ -3,6 +3,12 @@ interface CalculateBmi {
     value2: number;
 }
 
+interface CalculateBmiResponse {
+    weight: number;
+    height: number;
+    bmi: string;
+}
+
 const parseArguments = (args: string[]): CalculateBmi => {
     if (args.length < 4) throw new Error('Not enough arguments');
     if (args.length > 4) throw new Error('Too many arguments');
@@ -16,28 +22,38 @@ const parseArguments = (args: string[]): CalculateBmi => {
     }
 }
 
-const calculateBmi = (mass: number, height: number) => {
-    const bmiValue = (mass / ((height/ 100) * (height/ 100)));
+const calculateBmi = (mass: number, height: number): CalculateBmiResponse => {
+    const bmiValue = (mass / ((height / 100) * (height / 100)));
+    let bmi = ''
     if (bmiValue < 0) {
-        throw new Error('no negative values allowed');
+        throw new Error('malformatted parameters');
     } else if (bmiValue < 18.5) {
-        console.log('Underweight');
+        bmi = 'Underweight'
     } else if (bmiValue > 18.5 && bmiValue < 25) {
-        console.log('Normal range');
+        bmi = 'Normal range';
     } else if (bmiValue > 25 && bmiValue < 30) {
-        console.log('Overweight');
+        bmi = 'Overweight';
     } else if (bmiValue > 30) {
-        console.log('Obese');
+        bmi = 'Obese';
+    }
+    return {
+        weight: mass,
+        height: height,
+        bmi: bmi
+    }
+}
+if (process.argv[1] === import.meta.filename) {
+    try {
+        const {value1, value2} = parseArguments(process.argv);
+        calculateBmi(value1, value2)
+    } catch (error: unknown) {
+        let errorMessage = 'Something bad happened.'
+        if (error instanceof Error) {
+            errorMessage += ' Error: ' + error.message;
+        }
+        console.log(errorMessage);
     }
 }
 
-try {
-    const {value1, value2} = parseArguments(process.argv);
-    calculateBmi(value1, value2)
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
-    }
-    console.log(errorMessage);
-}
+
+export default {calculateBmi}
