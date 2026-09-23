@@ -1,0 +1,21 @@
+### GET request to example server
+GET http://localhost:3001/api/notes
+
+###
+
+### DELETE request to example server
+DELETE http://localhost:3001/api/notes/3
+
+
+###
+POST http://localhost:3003/exercises
+Content-Type: application/json
+
+{
+  "dailyExercises": [1, 0, 2, 0, 3, 0, 2.5],
+  "target": 1
+}
+
+###
+DELETE  http://localhost:3001/api/notes/6a477525b1e1c73b16f1a578
+

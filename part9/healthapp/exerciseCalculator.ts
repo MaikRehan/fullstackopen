@@ -28,7 +28,7 @@ interface ExerciseResults {
 }
 
 
-const calcExercises = (target: number, exercises: number[]): ExerciseResults => {
+export const calcExercises = (target: number, exercises: number[]): ExerciseResults => {
     const periodLength: number = exercises.length;
 
     let trainingDays: number = 0;

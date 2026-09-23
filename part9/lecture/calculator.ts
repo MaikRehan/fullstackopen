@@ -12,7 +12,7 @@ export const calculator = (a: number, b: number, operation: Operation): number =
         default:
             throw new Error('unknown operation: ' + operation);
     }
-}
+};
 try {
     console.log(calculator(1, 5, 'divide'));
 } catch (error: unknown) {
