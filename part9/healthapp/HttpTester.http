@@ -1,19 +1,21 @@
 ### GET request to example server
-GET http://localhost:3001/api/notes
+GET http://localhost:3000/bmi?weight=72
 
 ###
+
+GET http://localhost:3000/bmi?height=180&weight=72'
 
 ### DELETE request to example server
 DELETE http://localhost:3001/api/notes/3
 
 
 ###
-POST http://localhost:3003/exercises
+POST http://localhost:3000/exercises
 Content-Type: application/json
 
 {
-  "dailyExercises": [1, 0, 2, 0, 3, 0, 2.5],
-  "target": 1
+  "daily_exercises": [1, 0, "two", 0, 3, 0, 2.5],
+  "target": 2
 }
 
 ###
