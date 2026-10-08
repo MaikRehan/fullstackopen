@@ -6,4 +6,13 @@ export interface DiagnosesEntry {
     latin?: string
 }
 
-export type DiagnosesWithoutLatin = Omit<DiagnosesEntry, 'latin'>;
+export interface PatientEntry {
+    id: string,
+    name: string,
+    dateOfBirth: string,
+    ssn?: string,
+    gender: string,
+    occupation:string
+}
+
+export type PatientsWithoutSsn = Omit<PatientEntry, 'ssn'>;
