@@ -1,4 +1,10 @@
-export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'windy' | 'stormy';
+export const Gender = {
+    Male: 'male',
+    Female: 'female',
+    Other: 'other'
+} as const;
+
+export type Gender = typeof Gender[keyof typeof Gender];
 
 export interface DiagnosesEntry {
     code: string,

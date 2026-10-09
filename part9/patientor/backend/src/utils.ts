@@ -1,4 +1,5 @@
 import type { NewPatient } from "./types.ts";
+import {Gender} from "./types.ts";
 
 const parseNewPatient = (object: unknown): NewPatient => {
     if ( !object || typeof object !== 'object' ) {
@@ -39,8 +40,8 @@ const parseSsn = (ssn: unknown): string => {
 };
 
 const parseGender = (gender: unknown): string => {
-    if (!gender || !isString(gender)) {
-        throw new Error('Incorrect or missing gender');
+    if (!gender || !isString(gender) || !isGender(gender)) {
+        throw new Error('Incorrect or missing gender' + gender);
     }
     return gender;
 };
@@ -58,6 +59,10 @@ const isDate = (date: string): boolean => {
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
+};
+
+const isGender = (param: string): param is Gender => {
+    return (Object.values(Gender) as string[]).includes(param);
 };
 
 export default { parseNewPatient };
