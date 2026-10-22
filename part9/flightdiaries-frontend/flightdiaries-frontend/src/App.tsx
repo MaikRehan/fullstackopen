@@ -1,6 +1,7 @@
-import type {DiaryEntry} from "./types.ts";
+import type {DiaryEntry, NewDiaryEntry, Visibility, Weather} from "./types.ts";
 import diaryService from "./services/diariesService.ts";
 import {useEffect, useState} from "react";
+import {NewDiaryEntryForm} from "./components/NewDiaryEntryForm.tsx";
 
 export interface SingleDiaryEntryProps {
     entry: DiaryEntry;
@@ -17,6 +18,12 @@ export const SingleDiaryEntry = (props: SingleDiaryEntryProps) => {
     )
 }
 
+export interface CreateDiaryEntryProps {
+    createDiaryEntry: (
+        newDiaryEntry: NewDiaryEntry
+    ) => void;
+}
+
 
 function App() {
 
@@ -30,11 +37,23 @@ function App() {
         void fetchDiaryEntries();
     }, []);
 
+    const createDiaryEntry = async (newDiaryEntry: NewDiaryEntry) => {
+        const savedDiaryEntry = await diaryService.create(newDiaryEntry);
+
+        const data = await diaryService.getAll();
+        setDiaryEntries(data);
+    }
+
     return (
         <div>
-            {diaryEntries.map((entry) => (
-                <SingleDiaryEntry key={entry.id} entry={entry}/>
-            ))}
+            <div>
+                <NewDiaryEntryForm createDiaryEntry={createDiaryEntry}/>
+            </div>
+            <div>
+                {diaryEntries.map((entry) => (
+                    <SingleDiaryEntry key={entry.id} entry={entry}/>
+                ))}
+            </div>
         </div>
     );
 }
