@@ -1,26 +1,24 @@
 import {useState} from "react";
 import * as React from "react";
 import type {CreateDiaryEntryProps} from "../App.tsx";
-import type {Visibility, Weather} from "../types.ts";
+import {Visibility, Weather} from "../types.ts";
 
 export const NewDiaryEntryForm = ({createDiaryEntry}: CreateDiaryEntryProps) => {
 
     const [date, setDate] = useState('')
-    const [visibility, setVisibility] = useState('')
-    const [weather, setWeather] = useState('')
+    const [visibility, setVisibility] = useState<Visibility>(Visibility.Great)
+    const [weather, setWeather] = useState<Weather>(Weather.Sunny)
     const [comment, setComment] = useState('')
 
     const addDiaryEntry = (event: React.SyntheticEvent) => {
         event.preventDefault()
         createDiaryEntry({
             date: date,
-            visibility: visibility as Visibility,
-            weather: weather as Weather,
+            visibility: visibility,
+            weather: weather,
             comment: comment,
         })
         setDate(date);
-        setVisibility(visibility);
-        setWeather(weather);
         setComment(comment);
     }
 
@@ -31,32 +29,39 @@ export const NewDiaryEntryForm = ({createDiaryEntry}: CreateDiaryEntryProps) => 
                     <label>
                         date
                         <input
-                            type="text"
+                            type="date"
                             value={date}
                             onChange={event => setDate(event.target.value)}
                         />
                     </label>
                 </div>
+
                 <div>
-                    <label>
-                        visibility
-                        <input
-                            type="Visibility"
-                            value={visibility}
-                            onChange={event => setVisibility(event.target.value)}
-                        />
-                    </label>
+                    visibility
+                    {Object.values(Visibility).map(visibility =>
+                        <label key={visibility}>
+                            <input type="radio"
+                                   name="visibility"
+                                   value={visibility}
+                                   onChange={() => setVisibility(visibility)}/>
+                            {visibility}
+                        </label>
+                    )}
                 </div>
+
                 <div>
-                    <label>
-                        weather
-                        <input
-                            type="Weather"
-                            value={weather}
-                            onChange={event => setWeather(event.target.value)}
-                        />
-                    </label>
+                    weather
+                    {Object.values(Weather).map(weather =>
+                        <label key={weather}>
+                            <input type="radio"
+                                   name="weather"
+                                   value={weather}
+                                   onChange={() => setWeather(weather)}/>
+                            {weather}
+                        </label>
+                    )}
                 </div>
+
                 <div>
                     <label>
                         comment
