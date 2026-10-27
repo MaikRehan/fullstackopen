@@ -1,9 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import patients from '../../data/patients.ts';
-import type { PatientEntry, PatientsWithoutSsn, NewPatient } from "../types.ts";
+import type { PatientEntry, PatientsWithoutSsn, NewPatient, Patient } from "../types.ts";
 
 const getEntries = (): PatientEntry[] => {
     return patients;
+};
+
+const getPatientById = (id: string): Patient => {
+    return <Patient>patients.find(patient => patient.id === id);
 };
 
 const getPatientEntriesWithoutSsn = (): PatientsWithoutSsn[] => {
@@ -28,5 +32,6 @@ const addPatient = ( patient: NewPatient): PatientEntry => {
 export default {
     getEntries,
     addPatient,
+    getPatientById,
     getPatientEntriesWithoutSsn
 };
